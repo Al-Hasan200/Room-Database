@@ -9,10 +9,19 @@
     <EditText
         android:layout_width="match_parent"
         android:layout_height="70dp"
+        android:hint="Enter id"
+        android:layout_margin="10dp"
+        android:padding="10dp"
+        android:id="@+id/id"/>
+
+    <EditText
+        android:layout_width="match_parent"
+        android:layout_height="70dp"
         android:hint="Enter first name"
         android:layout_margin="10dp"
         android:padding="10dp"
-        android:id="@+id/firstName"/>
+        android:id="@+id/firstName"
+        android:layout_below="@+id/id"/>
 
     <EditText
         android:layout_width="match_parent"
