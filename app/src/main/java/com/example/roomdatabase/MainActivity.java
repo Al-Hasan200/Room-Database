@@ -1,19 +1,24 @@
 package com.example.roomdatabase;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.room.Insert;
 import androidx.room.Room;
 
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.Toast;
+
+import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
 
     //variable declaring
-    EditText firstName, lastName;
-    Button saveButton;
+    EditText firstName, lastName, id;
+    Button saveButton, fetchButton;
+    TextView textDisplay;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -24,17 +29,61 @@ public class MainActivity extends AppCompatActivity {
         firstName = findViewById(R.id.firstName);
         lastName = findViewById(R.id.lastName);
         saveButton = findViewById(R.id.saveButton);
+        id = findViewById(R.id.id);
+        textDisplay = findViewById(R.id.textDisplay);
+        fetchButton = findViewById(R.id.fetchData);
 
         //save data
         saveButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                //backgroundThread class object create
+                /*//backgroundThread class object create
                 BackgroundThread backgroundThread = new BackgroundThread();
                 //thread start
                 backgroundThread.start();
                 firstName.setText("");
-                lastName.setText("");
+                lastName.setText("");*/
+
+                //app database object create
+                AppDatabase appDatabase = Room.databaseBuilder(getApplicationContext(),
+                        AppDatabase.class, "room_db").allowMainThreadQueries().build();
+
+                //create interface object
+                UserDao userDao = appDatabase.userDao();
+
+                //uid exist or not
+                Boolean check = userDao.is_exist(Integer.parseInt(id.getText().toString()));
+                if (check == false){
+                    userDao.insertRecord(new User(Integer.parseInt(id.getText().toString()), firstName.getText().toString(), lastName.getText().toString()));
+                    id.setText("");
+                    firstName.setText("");
+                    lastName.setText("");
+                    Toast.makeText(MainActivity.this, "Record save successfully...", Toast.LENGTH_SHORT).show();
+                }else {
+                    Toast.makeText(MainActivity.this, "Record not save id already exist...", Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
+
+        //display data
+        fetchButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                //app database object create
+                AppDatabase appDatabase = Room.databaseBuilder(getApplicationContext(),
+                        AppDatabase.class, "room_db").allowMainThreadQueries().build();
+
+                //create interface object
+                UserDao userDao = appDatabase.userDao();
+
+                //data set in list
+                List<User> users = userDao.getallusers();
+                String string = "";
+
+                for (User user : users){
+                    string = string+"\t  "+user.getUid()+". "+user.getFirstName()+" "+user.getLastName()+"\n\n";
+                }
+                textDisplay.setText(string);
             }
         });
     }
@@ -46,7 +95,7 @@ public class MainActivity extends AppCompatActivity {
      Asynchronous queries (queries that return LiveData or RxJava Flowable)
      are exempt from this rule since they asynchronously run the query on a background
      thread when needed.
-    */
+
 
     //create thread class
     public class BackgroundThread extends Thread{
@@ -71,5 +120,5 @@ public class MainActivity extends AppCompatActivity {
             //firstName.setText("");
             //lastName.setText("");
         }
-    }
+    }*/
 }
