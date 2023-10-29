@@ -83,6 +83,7 @@ public class MainActivity extends AppCompatActivity {
                 for (User user : users){
                     string = string+"\t  "+user.getUid()+". "+user.getFirstName()+" "+user.getLastName()+"\n\n";
                 }
+                //display user data
                 textDisplay.setText(string);
             }
         });
